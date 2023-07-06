@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/yeonghoon123/DynamoDB_usage_Node/issues"
   },
-  "homepage": "https://github.com/yeonghoon123/DynamoDB_usage_Node#readme"
+  "homepage": "https://github.com/yeonghoon123/DynamoDB_usage_Node#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1411.0"
+  }
 }
