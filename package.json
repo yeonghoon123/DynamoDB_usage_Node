@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/yeonghoon123/DynamoDB_usage_Node#readme",
   "dependencies": {
-    "aws-sdk": "^2.1411.0"
+    "aws-sdk": "^2.1411.0",
+    "dotenv": "^16.3.1",
+    "enquirer": "^2.3.6"
   }
 }
