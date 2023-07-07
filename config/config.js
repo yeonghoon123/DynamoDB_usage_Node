@@ -1,3 +1,11 @@
+/*
+코드: A10
+작성자: 김영훈
+작성일: 2023.07.06
+코드 설명: AWS 기본 설정
+버전: V0.1
+*/
+
 module.exports = {
     aws_table_name: "userlist",
     aws_remote_config: {

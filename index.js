@@ -1,7 +1,19 @@
+/*
+코드: M10
+작성자: 김영훈
+작성일: 2023.07.06
+코드 설명: DynamoDB SDK 사용법 및 예시
+버전: V0.1
+*/
+
 require("dotenv").config(); // use env
 
 /* ------------------------------ command js file ------------------------------ */
-const { dynamoInsert } = require("./command/insert/insert");
+const { dynamoInsert } = require("./command/insert");
+const { dynamoSelect } = require("./command/select");
+const { dynamoUpdate } = require("./command/update");
+
+const askCommandList = require("./command/askCommand");
 
 /* ------------------------------ AWS ------------------------------ */
 const AWS = require("aws-sdk"); // use aws-sdk
@@ -10,52 +22,38 @@ AWS.config.update(AWS_CONFIG.aws_remote_config); // aws의 config를 설정한 r
 const dynamo = new AWS.DynamoDB.DocumentClient(); // dynamodb 연결
 
 /* ------------------------------ use enquirer ------------------------------ */
-const { AutoComplete, prompt } = require("enquirer");
-
-// Expect a normal string input from the user
-const insertQuestion = [
-    {
-        type: "input",
-        name: "userid",
-        message:
-            "userid를 입력하세요. (string, 검색할 수 있도록 외울 수있는 번호)",
-    },
-    {
-        type: "input",
-        name: "name",
-        message: "name을 입력하세요. (string)",
-    },
-    {
-        type: "input",
-        name: "age",
-        message: "age를 입력하세요. (number)",
-    },
-    {
-        type: "input",
-        name: "job",
-        message: "What is your job? (string)",
-    },
-];
-
-// Let the user choose one answer
-const askCommand = new AutoComplete({
-    name: "command",
-    message: "커맨드를 선택하시오",
-    limit: 10,
-    initial: 2,
-    choices: ["SELECT", "INSERT", "UPDATE", "DELETE"],
-});
+const { prompt } = require("enquirer");
 
 const commandStart = async () => {
-    const choiceCommand = await askCommand.run();
+    const choiceCommand = await askCommandList.askCommand.run();
     switch (choiceCommand) {
         case "INSERT":
-            const userData = await prompt(insertQuestion);
+            const userData = await prompt(askCommandList.insertQuestion);
+            dynamoInsert(dynamo, userData);
+            break;
+
+        case "SELECT":
+            let searchData = await prompt(askCommandList.selectQuestion);
+            if (searchData.age !== "") {
+                searchData.ageCondition =
+                    await askCommandList.ageQuestion.run();
+            }
+            dynamoSelect(dynamo, searchData);
+            break;
+
+        case "UPDATE":
+            const updateData = await prompt(askCommandList.updateQuestion);
+            dynamoUpdate(dynamo, updateData);
+            break;
+
+        case "DELETE":
+            const deleteData = await prompt(insertQuestion);
             dynamoInsert(dynamo, userData);
             break;
     }
 };
 
+// AWS에 보내온 로그이후 실행될수있도록 타이머 설정
 setTimeout(() => {
     commandStart();
 }, 1000);
