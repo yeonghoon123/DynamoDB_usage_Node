@@ -2,15 +2,16 @@
 코드: DS10
 작성자: 김영훈
 작성일: 2023.07.06
-코드 설명: DynamoDB SDK SELECT문 사용법 및 예시
-버전: V0.1
+코드 설명: DynamoDB SDK SELECT문 실행
+버전: V0.2
 */
 
 // Dynamo DB에서 SQL중 SELECT문의 WHERE, LIKE등 기능 구현
 const dynamoSelect = async (dynamo, searchData) => {
     let getItems; // 사용자가 원하는 검색 데이터
     let filterValue = []; // 사용자가 입력한 조건에 따라 조건식이 담긴 배열
-    let expressionAttrVal = {}; // dynamo db에서 에러가 나타나지 않도록한 표현식
+    let expressionAttrVal = {}; // dynamo db에서 에러가 나타나지 않도록한 value값 표현식
+    let expressionAttrName = {}; // dynamo db에서 에러가 나타나지 않도록한 key값 표현식
 
     // 조건이 없을 경우 전체 검색, 있을경우 조건에 맞게 검색
     if (
@@ -26,7 +27,13 @@ const dynamoSelect = async (dynamo, searchData) => {
             .promise();
     } else {
         if (searchData.userid !== "") {
-            filterValue = [...filterValue, "userid = :useridVal"];
+            filterValue = [...filterValue, "#userid = :useridVal"];
+
+            expressionAttrName = {
+                ...expressionAttrName,
+                "#userid": "userid",
+            };
+
             expressionAttrVal = {
                 ...expressionAttrVal,
                 ":useridVal": searchData.userid,
@@ -34,7 +41,13 @@ const dynamoSelect = async (dynamo, searchData) => {
         }
 
         if (searchData.name !== "") {
-            filterValue = [...filterValue, "contains(name, :nameVal)"];
+            filterValue = [...filterValue, "contains(#name, :nameVal)"];
+
+            expressionAttrName = {
+                ...expressionAttrName,
+                "#name": "name",
+            };
+
             expressionAttrVal = {
                 ...expressionAttrVal,
                 ":nameVal": searchData.name,
@@ -45,25 +58,31 @@ const dynamoSelect = async (dynamo, searchData) => {
             // 사용자가 입력한 나이 조건에 미만,이하,같음,이상,초과를 구분
             switch (searchData.ageCondition) {
                 case "more":
-                    filterValue = [...filterValue, "age >= :ageVal"];
+                    filterValue = [...filterValue, "#age >= :ageVal"];
                     break;
 
                 case "below":
-                    filterValue = [...filterValue, "age <= :ageVal"];
+                    filterValue = [...filterValue, "#age <= :ageVal"];
                     break;
 
                 case "same":
-                    filterValue = [...filterValue, "age = :ageVal"];
+                    filterValue = [...filterValue, "#age = :ageVal"];
                     break;
 
                 case "over":
-                    filterValue = [...filterValue, "age > :ageVal"];
+                    filterValue = [...filterValue, "#age > :ageVal"];
                     break;
 
                 case "same":
-                    filterValue = [...filterValue, "age  :ageVal"];
+                    filterValue = [...filterValue, "#age  :ageVal"];
                     break;
             }
+
+            expressionAttrName = {
+                ...expressionAttrName,
+                "#age": "age",
+            };
+
             expressionAttrVal = {
                 ...expressionAttrVal,
                 ":ageVal": searchData.age,
@@ -71,7 +90,12 @@ const dynamoSelect = async (dynamo, searchData) => {
         }
 
         if (searchData.job !== "") {
-            filterValue = [...filterValue, "contains(job, :jobVal)"];
+            filterValue = [...filterValue, "contains(#job, :jobVal)"];
+
+            expressionAttrName = {
+                ...expressionAttrName,
+                "#job": "job",
+            };
 
             expressionAttrVal = {
                 ...expressionAttrVal,
@@ -84,6 +108,7 @@ const dynamoSelect = async (dynamo, searchData) => {
             .scan({
                 TableName: process.env.AWS_DYNAMO_TABLE,
                 FilterExpression: filterValue,
+                ExpressionAttributeNames: expressionAttrName,
                 ExpressionAttributeValues: expressionAttrVal,
             })
             .promise();

@@ -3,7 +3,7 @@
 작성자: 김영훈
 작성일: 2023.07.06
 코드 설명: DynamoDB SDK query중 사용자에게 질문을 설정
-버전: V0.1
+버전: V0.2
 */
 
 /* ------------------------------ use enquirer ------------------------------ */
@@ -16,7 +16,7 @@ const askCommand = new AutoComplete({
     limit: 10,
     initial: 2,
     choices: [
-        "CREATE TABLE(TABLE이 없는 경우 생성)",
+        { name: "CREATE", message: "CREATE TABLE(TABLE이 없는 경우 생성)" },
         "SELECT",
         "INSERT",
         "UPDATE",
@@ -51,6 +51,7 @@ const insertQuestion = [
 ];
 
 /* ------------------------------ SELECT question ------------------------------ */
+// 검색할 데이터를 사용자에게 입력받기 위한 질문
 const selectQuestion = [
     {
         type: "input",
@@ -74,7 +75,7 @@ const selectQuestion = [
     },
 ];
 
-// Let the user choose one answer
+// 사용자가 나이를 조건으로 검색하고 싶을 경우 나이에 조건을 선택 질문
 const ageQuestion = new AutoComplete({
     name: "age",
     message: "나이의 조건을 선택하시오.",
@@ -84,6 +85,7 @@ const ageQuestion = new AutoComplete({
 });
 
 /* ------------------------------ UPDATE question ------------------------------ */
+// 수정할 데이터를 사용자에게 입력받기 위한 질문
 const updateQuestion = [
     {
         type: "input",
@@ -108,10 +110,26 @@ const updateQuestion = [
     },
 ];
 
+/* ------------------------------ DELETE question ------------------------------ */
+// 삭제할 데이터를 사용자에게 입력받기 위한 질문
+const deleteQuestion = [
+    {
+        type: "input",
+        name: "userid",
+        message: "삭제할 userid를 입력하세요. (string)",
+    },
+    {
+        type: "input",
+        name: "userCheck",
+        message: "삭제확인을 위해 delete를 입력해주세요.",
+    },
+];
+
 module.exports = {
     askCommand,
     insertQuestion,
     selectQuestion,
     ageQuestion,
     updateQuestion,
+    deleteQuestion,
 };
