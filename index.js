@@ -7,37 +7,45 @@
 */
 
 require("dotenv").config(); // use env
+const askCommandList = require("./command/questionCommand"); // 사용자에게 보여줄 질문 목록
 
-/* ------------------------------ command js file ------------------------------ */
-const { dynamoCreateTable } = require("./command/createTable");
-const { dynamoInsert } = require("./command/insert");
-const { dynamoSelect } = require("./command/select");
-const { dynamoUpdate } = require("./command/update");
-const { dynamoDelete } = require("./command/delete");
-
-const askCommandList = require("./command/askCommand");
+/* ------------------------------ MySQL command js file ------------------------------ */
+const { mysqlCreate } = require("./command/MySQL/create");
+const { mysqlInsert } = require("./command/MySQL/insert");
+const { mysqlSelect } = require("./command/MySQL/select");
 
 /* ------------------------------ AWS ------------------------------ */
 const AWS = require("aws-sdk"); // use aws-sdk
-const AWS_CONFIG = require("./config/config"); // aws config 설정
+const AWS_CONFIG = require("./setting/config"); // aws config 설정
 AWS.config.update(AWS_CONFIG.aws_remote_config); // aws의 config를 설정한 remote config로 변경
 const dynamo = new AWS.DynamoDB.DocumentClient(); // dynamodb 연결
+
+/* ------------------------------ Dynamo DB command js file ------------------------------ */
+const { dynamoCreate } = require("./command/DynamoDB/create");
+const { dynamoInsert } = require("./command//DynamoDB/insert");
+const { dynamoSelect } = require("./command//DynamoDB/select");
+const { dynamoUpdate } = require("./command//DynamoDB/update");
+const { dynamoDelete } = require("./command//DynamoDB/delete");
 
 /* ------------------------------ Command Start ------------------------------ */
 const { prompt } = require("enquirer");
 
 const commandStart = async () => {
-    const choiceCommand = await askCommandList.askCommand.run(); // 사용자가 실행하였을때 원하는 query문을 선택할 수 있도록 물어봄
+    const choiceUseDB = await askCommandList.choiceDBquestion.run(); // 사용자가 어떤 database를 사용할지 선택하도록 질문
+    const choiceCommand = await askCommandList.questionCommand.run(); // 사용자가 실행하였을때 원하는 query문을 선택하도록 질문
     switch (choiceCommand) {
         case "CREATE":
             // table이 존재하지 않은 사용자에게 table을 생성해주는 함수 실행
-            dynamoCreateTable(AWS);
+            choiceUseDB === "MySQL" ? mysqlCreate() : dynamoCreate(AWS);
             break;
 
         case "INSERT":
             // 사용자가 추가하고 싶은 데이터를 입력받아 INSERT 함수 실행
             const userData = await prompt(askCommandList.insertQuestion);
-            dynamoInsert(dynamo, userData);
+            choiceUseDB === "MySQL"
+                ? mysqlInsert(userData)
+                : dynamoInsert(dynamo, userData);
+
             break;
 
         case "SELECT":
@@ -49,13 +57,19 @@ const commandStart = async () => {
                 searchData.ageCondition =
                     await askCommandList.ageQuestion.run();
             }
-            dynamoSelect(dynamo, searchData);
+
+            choiceUseDB === "MySQL"
+                ? mysqlSelect(searchData)
+                : dynamoSelect(dynamo, searchData);
+
             break;
 
         case "UPDATE":
             // 사용자가 수정하고 싶은 데이터를 입력받아 UPDATE 함수 실행
             const updateData = await prompt(askCommandList.updateQuestion);
-            dynamoUpdate(dynamo, updateData);
+            choiceUseDB === "MySQL"
+                ? dynamoSelect(dynamo, searchData)
+                : dynamoUpdate(dynamo, updateData);
             break;
 
         case "DELETE":
@@ -64,14 +78,18 @@ const commandStart = async () => {
 
             // 사용자가 정말 삭제를 원하였는지 확인하는 문구가 일치 하면 함수 실행
             if (deleteData.userCheck === "delete") {
-                dynamoDelete(dynamo, deleteData.userid);
+                choiceUseDB === "MySQL"
+                    ? dynamoSelect(dynamo, searchData)
+                    : dynamoDelete(dynamo, deleteData.userid);
             }
-
             break;
+
+        default:
+            console.log("No command selected");
     }
 };
 
-// AWS에 보내온 로그이후 실행될수있도록 타이머 설정
+// AWS에 보내온 message 이후 실행될수있도록 타이머 설정
 setTimeout(() => {
     commandStart();
 }, 1000);

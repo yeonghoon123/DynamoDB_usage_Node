@@ -8,7 +8,7 @@
 
 // Dynamo DB에서 SQL중 SELECT문의 WHERE, LIKE등 기능 구현
 const dynamoSelect = async (dynamo, searchData) => {
-    let getItems; // 사용자가 원하는 검색 데이터
+    let db_response; // 사용자가 원하는 검색 데이터
     let filterValue = []; // 사용자가 입력한 조건에 따라 조건식이 담긴 배열
     let expressionAttrVal = {}; // dynamo db에서 에러가 나타나지 않도록한 value값 표현식
     let expressionAttrName = {}; // dynamo db에서 에러가 나타나지 않도록한 key값 표현식
@@ -20,7 +20,7 @@ const dynamoSelect = async (dynamo, searchData) => {
         searchData.age === "" &&
         searchData.job === ""
     ) {
-        getItems = await dynamo
+        db_response = await dynamo
             .scan({
                 TableName: process.env.AWS_DYNAMO_TABLE,
             })
@@ -55,28 +55,10 @@ const dynamoSelect = async (dynamo, searchData) => {
         }
 
         if (searchData.age !== "") {
-            // 사용자가 입력한 나이 조건에 미만,이하,같음,이상,초과를 구분
-            switch (searchData.ageCondition) {
-                case "more":
-                    filterValue = [...filterValue, "#age >= :ageVal"];
-                    break;
-
-                case "below":
-                    filterValue = [...filterValue, "#age <= :ageVal"];
-                    break;
-
-                case "same":
-                    filterValue = [...filterValue, "#age = :ageVal"];
-                    break;
-
-                case "over":
-                    filterValue = [...filterValue, "#age > :ageVal"];
-                    break;
-
-                case "same":
-                    filterValue = [...filterValue, "#age  :ageVal"];
-                    break;
-            }
+            filterValue = [
+                ...filterValue,
+                `#age ${searchData.ageCondition} :ageVal`,
+            ];
 
             expressionAttrName = {
                 ...expressionAttrName,
@@ -104,7 +86,7 @@ const dynamoSelect = async (dynamo, searchData) => {
         }
 
         filterValue = filterValue.join(" AND ");
-        getItems = await dynamo
+        db_response = await dynamo
             .scan({
                 TableName: process.env.AWS_DYNAMO_TABLE,
                 FilterExpression: filterValue,
@@ -116,7 +98,9 @@ const dynamoSelect = async (dynamo, searchData) => {
 
     console.log("-----------------------------------------");
     console.log("SELECT command complete \n");
-    console.log(getItems.Items);
+    db_response.Items.length === 0
+        ? console.log("Empty Data")
+        : console.log(db_response);
     console.log("-----------------------------------------");
 };
 

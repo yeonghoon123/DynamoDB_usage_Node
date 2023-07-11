@@ -6,7 +6,7 @@
 버전: V0.2
 */
 
-const dynamoCreateTable = async (AWS) => {
+const dynamoCreate = async (AWS) => {
     const tableName = "userlist";
     const dynamoDB = new AWS.DynamoDB();
 
@@ -29,4 +29,4 @@ const dynamoCreateTable = async (AWS) => {
     console.log("CREATE command complete \n");
 };
 
-module.exports = { dynamoCreateTable };
+module.exports = { dynamoCreate };

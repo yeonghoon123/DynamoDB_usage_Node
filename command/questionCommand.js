@@ -1,20 +1,27 @@
 /*
-코드: AC10
+코드: QC10
 작성자: 김영훈
 작성일: 2023.07.06
-코드 설명: DynamoDB SDK query중 사용자에게 질문을 설정
+코드 설명: 사용자에게 질문할 질문 목록
 버전: V0.2
 */
 
 /* ------------------------------ use enquirer ------------------------------ */
-const { AutoComplete, MultiSelect } = require("enquirer");
+const { AutoComplete } = require("enquirer");
 
-// Let the user choose one answer
-const askCommand = new AutoComplete({
+/* ------------------------------ What DB usage question------------------------------ */
+const choiceDBquestion = new AutoComplete({
+    name: "use_db",
+    message: "사용할 database를 선택하시오",
+    limit: 10,
+    choices: ["MySQL", "Dynamo DB"],
+});
+
+/* ------------------------------ command question ------------------------------ */
+const questionCommand = new AutoComplete({
     name: "command",
     message: "커맨드를 선택하시오",
     limit: 10,
-    initial: 2,
     choices: [
         { name: "CREATE", message: "CREATE TABLE(TABLE이 없는 경우 생성)" },
         "SELECT",
@@ -31,22 +38,22 @@ const insertQuestion = [
         type: "input",
         name: "userid",
         message:
-            "userid를 입력하세요. (string, 검색할 수 있도록 외울 수있는 번호)",
+            "userid를 입력하세요. (string, NOT NULL, 검색할 수 있도록 외울 수있는 번호)",
     },
     {
         type: "input",
         name: "name",
-        message: "name을 입력하세요. (string)",
+        message: "name을 입력하세요. (string, NOT NULL)",
     },
     {
         type: "input",
         name: "age",
-        message: "age를 입력하세요. (number)",
+        message: "age를 입력하세요. (number, NOT NULL)",
     },
     {
         type: "input",
         name: "job",
-        message: "job을 입력하세요. (string)",
+        message: "job을 입력하세요. (string, NOT NULL)",
     },
 ];
 
@@ -81,7 +88,13 @@ const ageQuestion = new AutoComplete({
     message: "나이의 조건을 선택하시오.",
     limit: 10,
     initial: 2,
-    choices: ["more", "below", "same", "over", "under"],
+    choices: [
+        { name: ">=", message: "more" },
+        { name: "<=", message: "below" },
+        { name: "=", message: "same" },
+        { name: ">", message: "over" },
+        { name: "<", message: "under" },
+    ],
 });
 
 /* ------------------------------ UPDATE question ------------------------------ */
@@ -126,10 +139,11 @@ const deleteQuestion = [
 ];
 
 module.exports = {
-    askCommand,
+    questionCommand,
     insertQuestion,
     selectQuestion,
     ageQuestion,
     updateQuestion,
     deleteQuestion,
+    choiceDBquestion,
 };
