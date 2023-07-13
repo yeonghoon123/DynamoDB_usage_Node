@@ -3,13 +3,12 @@
 작성자: 김영훈
 작성일: 2023.07.06
 코드 설명: MySQL SELECT문 실행
-버전: V0.2
+버전: V0.3
 */
 
 /* ------------------------------USE MySQL------------------------------ */
 const { mysqlQuery } = require("../../setting/mysqlConfig");
 
-// Dynamo DB에서 SQL중 SELECT문의 WHERE, LIKE등 기능 구현
 const mysqlSelect = async (searchData) => {
     let selectSQL = "SELECT * FROM userlist";
     let paramData = [];
@@ -22,7 +21,7 @@ const mysqlSelect = async (searchData) => {
         searchData.age !== "" ||
         searchData.job !== ""
     ) {
-        selectSQL += "WHERE ";
+        selectSQL += " WHERE ";
         if (searchData.userid !== "") {
             conditionContent = [...conditionContent, "userid = ?"];
             paramData.push(searchData.userid);

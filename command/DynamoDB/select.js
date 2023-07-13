@@ -3,7 +3,7 @@
 작성자: 김영훈
 작성일: 2023.07.06
 코드 설명: DynamoDB SDK SELECT문 실행
-버전: V0.2
+버전: V0.3
 */
 
 // Dynamo DB에서 SQL중 SELECT문의 WHERE, LIKE등 기능 구현

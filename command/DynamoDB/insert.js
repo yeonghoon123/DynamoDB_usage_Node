@@ -3,11 +3,20 @@
 작성자: 김영훈
 작성일: 2023.07.06
 코드 설명: DynamoDB SDK INSERT문 사용법 및 예시
-버전: V0.2
+버전: V0.3
 */
 
 // Dynamo DB에서 SQL중 INSERT문 기능 구현
 const dynamoInsert = (dynamo, userData) => {
+    if (
+        userData.userid === "" ||
+        userData.name === "" ||
+        userData.age === "" ||
+        userData.job === ""
+    ) {
+        console.log("Please fill in all the data to INSERT");
+        return;
+    }
     dynamo.put(
         {
             TableName: process.env.AWS_DYNAMO_TABLE,
