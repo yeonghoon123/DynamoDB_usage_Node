@@ -2,14 +2,14 @@
 코드: MU10
 작성자: 김영훈
 작성일: 2023.07.06
-코드 설명: MySQL UPDATE문 실행
-버전: V0.3
+코드 설명: MariaDB UPDATE문 실행
+버전: V0.4
 */
 
-/* ------------------------------USE MySQL------------------------------ */
-const { mysqlQuery } = require("../../setting/mysqlConfig");
+/* ------------------------------USE MariaDB------------------------------ */
+const { mariaQuery } = require("../../setting/mariaConfig");
 
-const mysqlUpdate = async (updateData) => {
+const mariadbUpdate = async (updateData) => {
     let updateSQL = "UPDATE userlist SET";
     let updateContant = [];
 
@@ -43,9 +43,9 @@ const mysqlUpdate = async (updateData) => {
         updateContant = updateContant.join(", ");
         updateSQL += ` ${updateContant} WHERE userid = ?;`;
 
-        mysqlQuery(updateSQL, paramData);
+        mariaQuery(updateSQL, paramData);
         console.log("UPDATE command complete \n");
     }
 };
 
-module.exports = { mysqlUpdate };
+module.exports = { mariadbUpdate };

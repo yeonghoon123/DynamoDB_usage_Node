@@ -3,7 +3,7 @@
 작성자: 김영훈
 작성일: 2023.07.06
 코드 설명: 사용자에게 질문할 질문 목록
-버전: V0.3
+버전: V0.4
 */
 
 /* ------------------------------ use enquirer ------------------------------ */
@@ -14,7 +14,7 @@ const choiceDBquestion = new AutoComplete({
     name: "use_db",
     message: "사용할 database를 선택하시오",
     limit: 10,
-    choices: ["MySQL", "Dynamo DB"],
+    choices: ["MariaDB", "Dynamo DB"],
 });
 
 /* ------------------------------ command question ------------------------------ */

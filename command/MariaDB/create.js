@@ -2,14 +2,14 @@
 코드: MC10
 작성자: 김영훈
 작성일: 2023.07.06
-코드 설명: MySQL CREATE를 사용하여 테이블 생성
-버전: V0.3
+코드 설명: MariaDB CREATE를 사용하여 테이블 생성
+버전: V0.4
 */
 
-/* ------------------------------USE MySQL------------------------------ */
-const { mysqlQuery } = require("../../setting/mysqlConfig");
+/* ------------------------------USE MariaDB------------------------------ */
+const { mariaQuery } = require("../../setting/mariaConfig");
 
-const mysqlCreate = () => {
+const mariadbCreate = () => {
     const createSQL =
         "CREATE TABLE userlist(" +
         "userid VARCHAR(30) NOT NULL PRIMARY KEY," +
@@ -17,9 +17,9 @@ const mysqlCreate = () => {
         "age VARCHAR(3) NOT NULL," +
         "job VARCHAR(30) NOT NULL);";
 
-    mysqlQuery(createSQL);
+    mariaQuery(createSQL);
 
     console.log("CREATE command complete \n");
 };
 
-module.exports = { mysqlCreate };
+module.exports = { mariadbCreate };

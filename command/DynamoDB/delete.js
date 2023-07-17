@@ -3,7 +3,7 @@
 작성자: 김영훈
 작성일: 2023.07.06
 코드 설명: DynamoDB SDK DELETE문 실행
-버전: V0.3
+버전: V0.4
 */
 
 const dynamoDelete = async (dynamo, userid) => {

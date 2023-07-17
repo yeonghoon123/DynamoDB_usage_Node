@@ -2,14 +2,14 @@
 코드: MS10
 작성자: 김영훈
 작성일: 2023.07.06
-코드 설명: MySQL SELECT문 실행
-버전: V0.3
+코드 설명: MariaDB SELECT문 실행
+버전: V0.4
 */
 
-/* ------------------------------USE MySQL------------------------------ */
-const { mysqlQuery } = require("../../setting/mysqlConfig");
+/* ------------------------------USE MariaDB------------------------------ */
+const { mariaQuery } = require("../../setting/mariaConfig");
 
-const mysqlSelect = async (searchData) => {
+const mariadbSelect = async (searchData) => {
     let selectSQL = "SELECT * FROM userlist";
     let paramData = [];
     let conditionContent = [];
@@ -49,14 +49,12 @@ const mysqlSelect = async (searchData) => {
         selectSQL += conditionContent;
     }
 
-    const db_response = await mysqlQuery(selectSQL, paramData);
+    const db_response = await mariaQuery(selectSQL, paramData);
 
     console.log("-----------------------------------------");
     console.log("SELECT command complete \n");
-    db_response.length === 0
-        ? console.log("Empty Data")
-        : console.log(db_response);
+    !db_response.length ? console.log("Empty Data") : console.log(db_response);
     console.log("-----------------------------------------");
 };
 
-module.exports = { mysqlSelect };
+module.exports = { mariadbSelect };
