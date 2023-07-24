@@ -91,8 +91,6 @@ const commandStart = async () => {
         default:
             console.log("No command selected");
     }
-
-    await commandStart();
 };
 
 // AWS에 보내온 message 이후 실행될수있도록 타이머 설정

@@ -6,7 +6,7 @@
 버전: V0.4
 */
 
-const { mariaQuery } = require("../../setting/mariaConfig"); // MariaDB query 실행 함수
+const { mariaQuery } = require("../../setting/mariaQuery"); // MariaDB query 실행 함수
 
 const mariadbSelect = async (searchData) => {
     let selectSQL = "SELECT * FROM userlist";
