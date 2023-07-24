@@ -62,16 +62,20 @@ const dynamoUpdate = async (dynamo, updateData) => {
             };
         }
 
+        console.log(updateExVal, expressionAttrName, expressionAttrVal);
+
         updateExVal = updateExVal.join(", ");
-        dynamo.update({
-            TableName: process.env.AWS_DYNAMO_TABLE,
-            Key: {
-                userid: updateData.userid,
-            },
-            ExpressionAttributeNames: expressionAttrName,
-            UpdateExpression: `SET ${updateExVal}`,
-            ExpressionAttributeValues: expressionAttrVal,
-        });
+        await dynamo
+            .update({
+                TableName: process.env.AWS_DYNAMO_TABLE,
+                Key: {
+                    userid: updateData.userid,
+                },
+                ExpressionAttributeNames: expressionAttrName,
+                UpdateExpression: `SET ${updateExVal}`,
+                ExpressionAttributeValues: expressionAttrVal,
+            })
+            .promise();
 
         console.log("UPDATE command complete \n");
     }

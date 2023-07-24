@@ -19,7 +19,6 @@
         2. Dynamo DB에 테이블 지정, 만약 테이블이 존재 하지 않다면 임시 userlist 테이블을 생성할 수 있는 CREATE TABLE 커맨드를 선택
         3. Maria DB 설치 및 설정
         4. env파일 생성후 아래 변수명 삽입
-           <br>
             - AWS_ACCESS_KEY_ID | AWS ID
             - AWS_SECRET_ACCESS_KEY | AWS private key
             - AWS_REGION | AWS region

@@ -6,7 +6,7 @@
 버전: V0.4
 */
 
-const dynamoInsert = (dynamo, userData) => {
+const dynamoInsert = async (dynamo, userData) => {
     if (
         userData.userid === "" ||
         userData.name === "" ||
@@ -16,7 +16,7 @@ const dynamoInsert = (dynamo, userData) => {
         console.log("Please fill in all the data to INSERT");
         return;
     }
-    dynamo.put(
+    await dynamo.put(
         {
             TableName: process.env.AWS_DYNAMO_TABLE,
             ConditionExpression: "attribute_not_exists(userid)",
