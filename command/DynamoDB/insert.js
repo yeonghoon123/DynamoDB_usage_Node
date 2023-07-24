@@ -2,11 +2,10 @@
 코드: DI10
 작성자: 김영훈
 작성일: 2023.07.06
-코드 설명: DynamoDB SDK INSERT문 사용법 및 예시
+코드 설명: DynamoDB SDK INSERT문 실행
 버전: V0.4
 */
 
-// Dynamo DB에서 SQL중 INSERT문 기능 구현
 const dynamoInsert = (dynamo, userData) => {
     if (
         userData.userid === "" ||

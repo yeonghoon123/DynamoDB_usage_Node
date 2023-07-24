@@ -20,14 +20,14 @@
         3. Maria DB 설치 및 설정
         4. env파일 생성후 아래 변수명 삽입
            <br>
-            - AWS_ACCESS_KEY_ID
-            - AWS_SECRET_ACCESS_KEY
-            - AWS_REGION
-            - AWS_DYNAMO_TABLE
-            - MARIA_HOST
-            - MARIA_USER
-            - MARIA_PW
-            - MARIA_DATABASE
+            - AWS_ACCESS_KEY_ID | AWS ID
+            - AWS_SECRET_ACCESS_KEY | AWS private key
+            - AWS_REGION | AWS region
+            - AWS_DYNAMO_TABLE  | userlist, user table
+            - MARIA_HOST | Maria db hostname
+            - MARIA_USER | Maria db user name
+            - MARIA_PW | Maria db password
+            - MARIA_DATABASE | Maria db use database
 
     <br>
 

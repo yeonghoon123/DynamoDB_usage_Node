@@ -6,8 +6,7 @@
 버전: V0.4
 */
 
-/* ------------------------------USE MariaDB------------------------------ */
-const { mariaQuery } = require("../../setting/mariaConfig");
+const { mariaQuery } = require("../../setting/mariaConfig"); // MariaDB query 실행 함수
 
 const mariadbCreate = () => {
     const createSQL =

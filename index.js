@@ -6,7 +6,7 @@
 버전: V0.4
 */
 
-require("dotenv").config(); // use env
+require("dotenv").config(); // env 사용
 const askCommandList = require("./command/questionCommand"); // 사용자에게 보여줄 질문 목록
 
 /* ------------------------------ MariaDB command js file ------------------------------ */
@@ -17,7 +17,7 @@ const { mariadbUpdate } = require("./command/MariaDB/update");
 const { mariadbDelete } = require("./command/MariaDB/delete");
 
 /* ------------------------------ AWS ------------------------------ */
-const AWS = require("aws-sdk"); // use aws-sdk
+const AWS = require("aws-sdk"); // aws-sdk 사용
 const AWS_CONFIG = require("./setting/config"); // aws config 설정
 AWS.config.update(AWS_CONFIG.aws_remote_config); // aws의 config를 설정한 remote config로 변경
 const dynamo = new AWS.DynamoDB.DocumentClient(); // dynamodb 연결
@@ -39,6 +39,7 @@ const commandStart = async () => {
         case "CREATE":
             // table이 존재하지 않은 사용자에게 table을 생성해주는 함수 실행
             choiceUseDB === "MariaDB" ? mariadbCreate() : dynamoCreate(AWS);
+
             break;
 
         case "INSERT":
@@ -69,10 +70,10 @@ const commandStart = async () => {
         case "UPDATE":
             // 사용자가 수정하고 싶은 데이터를 입력받아 UPDATE 함수 실행
             const updateData = await prompt(askCommandList.updateQuestion);
-            console.log(updateData);
             choiceUseDB === "MariaDB"
                 ? mariadbUpdate(updateData)
                 : dynamoUpdate(dynamo, updateData);
+
             break;
 
         case "DELETE":
